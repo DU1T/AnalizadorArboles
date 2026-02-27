@@ -57,6 +57,76 @@ public class ArbolModel
     public int GetCaminosLongitud(int longitud) {
         return contarCaminosRec(raiz, longitud);
     }
+    public List<String> GetHijos(String valor) {
+        List<String> lista = new ArrayList<>();
+        NodoGeneral<String> nodo = buscar(valor);
+
+        if (nodo != null) {
+            for (NodoGeneral<String> hijo : nodo.getHijos()) {
+                lista.add(hijo.getDato());
+            }
+        }
+
+        return lista;
+    }
+    public List<String> GetHermanos(String valor) {
+
+        List<String> hermanos = new ArrayList<>();
+
+        if (raiz == null) return hermanos;
+
+        Queue<NodoGeneral<String>> cola = new LinkedList<>();
+        cola.add(raiz);
+
+        while (!cola.isEmpty()) {
+
+            NodoGeneral<String> actual = cola.poll();
+
+            List<NodoGeneral<String>> hijos = actual.getHijos();
+
+            for (NodoGeneral<String> hijo : hijos) {
+
+                if (hijo.getDato().equals(valor)) {
+
+                    for (NodoGeneral<String> h : hijos) {
+                        if (!h.getDato().equals(valor)) {
+                            hermanos.add(h.getDato());
+                        }
+                    }
+                    return hermanos;
+                }
+            }
+
+            cola.addAll(hijos);
+        }
+
+        return hermanos;
+    }
+    public String HermanoIzquierdo(String valor) {
+
+        if (raiz == null) return null;
+
+        Queue<NodoGeneral<String>> cola = new LinkedList<>();
+        cola.add(raiz);
+
+        while (!cola.isEmpty()) {
+
+            NodoGeneral<String> actual = cola.poll();
+            List<NodoGeneral<String>> hijos = actual.getHijos();
+
+            for (int i = 0; i < hijos.size(); i++) {
+                if (hijos.get(i).getDato().equals(valor)) {
+                    if (i - 1 >= 0) {
+                        return hijos.get(i - 1).getDato();
+                    }
+                }
+            }
+
+            cola.addAll(hijos);
+        }
+
+        return null;
+    }
     //Altura
     public int GetAltura()
     {

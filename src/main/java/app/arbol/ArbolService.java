@@ -101,4 +101,23 @@ public class ArbolService {
     {
         modelo = new ArbolModel();
     }
+    public List<String> ancestrosPropios(String valor) {
+        return modelo.GetAncestrosPropios(valor);
+    }
+
+    public List<String> hijos(String valor) {
+        return modelo.GetHijos(valor);
+    }
+
+    public List<String> hermanos(String valor) {
+        return modelo.GetHermanos(valor);
+    }
+
+    public String hermanoIzquierdo(String valor) {
+        return modelo.HermanoIzquierdo(valor);
+    }
+
+    public boolean estaALaDerechaDe(String referencia, String posible) {
+        return modelo.EstaALaDerechaDe(referencia, posible);
+    }
 }

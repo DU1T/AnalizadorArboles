@@ -42,13 +42,32 @@ public class AnalisisArbolForm {
     private ArbolService service;
 
     //Constructor
-    public AnalisisArbolForm() {
+    public AnalisisArbolForm()
+    {
         service = new ArbolService();
+        PanelPrincipal.setPreferredSize(new Dimension(700,700));
         deshabilitarBotones();
         txtConsola.setEditable(false);
+        btnGenerar.addActionListener(this::btnGenerarActionPerformed);
+        btnEvaluarCamino.addActionListener(this::btnEvaluarCaminoActionPerformed);
+        btnAncestros.addActionListener(this::btnAncestrosActionPerformed);
+        btnNcestrosPropios.addActionListener(this::btnAncestrosPropiosActionPerformed);
+        btnAltura.addActionListener(this::btnAlturaActionPerformed);
+        btnProfundidad.addActionListener(this::btnProfundidadActionPerformed);
+        btnRecorridos.addActionListener(this::btnRecorridosActionPerformed);
+        btnDescendientes.addActionListener(this::btnDescendientesActionPerformed);
+        btnBuscarRaiz.addActionListener(this::btnBuscarRaizActionPerformed);
+        btnGetCaminos.addActionListener(this::btnGetCaminosActionPerformed);
+        btnHojas.addActionListener(this::btnHojasActionPerformed);
+        btnHermanoDer.addActionListener(this::btnHermanoDerActionPerformed);
+        btnHermanoIzq.addActionListener(this::btnHermanoIzqActionPerformed);
+        btnHermanos.addActionListener(this::btnHermanosActionPerformed);
+        btnHijos.addActionListener(this::btnHijosActionPerformed);
+        limpiarVistaInicial();
     }
 
-    private void deshabilitarBotones() {
+    private void deshabilitarBotones()
+    {
 
         btnBuscarRaiz.setEnabled(false);
         btnGetCaminos.setEnabled(false);
@@ -89,14 +108,14 @@ public class AnalisisArbolForm {
         String datos = txtDatos.getText().trim();
 
         if (datos.isEmpty()) {
-            txtConsola.setText("Debe ingresar los datos del arbol.");
+            log("Debe ingresar los datos del arbol.");
             return;
         }
 
         String[] valores = datos.split(",");
 
         if (valores.length < 16) {
-            txtConsola.setText("Debe ingresar todos los nodos del arbol.");
+            log("Debe ingresar todos los nodos del arbol.");
             return;
         }
 
@@ -125,7 +144,7 @@ public class AnalisisArbolForm {
         service.insertar("P", "N");
         service.insertar("Q", "N");
 
-        txtConsola.setText("Arbol generado correctamente.");
+        log("Arbol generado correctamente.");
 
         btnGenerar.setEnabled(false);
         txtDatos.setText("");
@@ -166,9 +185,8 @@ public class AnalisisArbolForm {
 
         String raiz = service.obtenerRaiz();
 
-        txtConsola.setText("Raíz del árbol: " + raiz);
+        log("Raíz del árbol: " + raiz);
 
-        // Aquí luego puedes resaltar en JTree
     }
 
     private void btnGetCaminosActionPerformed(ActionEvent evt) {
@@ -176,7 +194,7 @@ public class AnalisisArbolForm {
         String input = txtLongitud.getText().trim();
 
         if (input.isEmpty()) {
-            txtConsola.setText("Debe ingresar una longitud.");
+            log("Debe ingresar una longitud.");
             return;
         }
 
@@ -184,16 +202,19 @@ public class AnalisisArbolForm {
             int longitud = Integer.parseInt(input);
 
             if (longitud < 0) {
-                txtConsola.setText("La longitud debe ser >= 0.");
+                log("La longitud debe ser >= 0.");
+                txtLongitud.setText("");
                 return;
             }
 
             int total = service.contarCaminos(longitud);
 
-            txtConsola.setText("Caminos de longitud " + longitud + ": " + total);
+            log("Caminos de longitud " + longitud + ": " + total);
+            txtLongitud.setText("");
 
         } catch (NumberFormatException e) {
-            txtConsola.setText("Debe ingresar un numero valido.");
+            log("Debe ingresar un numero valido.");
+            txtLongitud.setText("");
         }
     }
 
@@ -202,7 +223,8 @@ public class AnalisisArbolForm {
         String input = txtSecuencia.getText().trim();
 
         if (input.isEmpty()) {
-            txtConsola.setText("Debe ingresar una secuencia.");
+            log("Debe ingresar una secuencia.");
+            txtLongitud.setText("");
             return;
         }
 
@@ -212,9 +234,11 @@ public class AnalisisArbolForm {
         boolean esCamino = service.esCamino(lista);
 
         if (esCamino) {
-            txtConsola.setText("La secuencia ES un camino valido.");
+            log("La secuencia " + input + " ES un camino valido.");
+            txtSecuencia.setText("");
         } else {
-            txtConsola.setText("La secuencia NO es un camino valido.");
+            log("La secuencia " + input + " NO es un camino valido.");
+            txtSecuencia.setText("");
         }
     }
 
@@ -223,21 +247,25 @@ public class AnalisisArbolForm {
         String nodo = txtNodo.getText().trim();
 
         if (nodo.isEmpty()) {
-            txtConsola.setText("Debe ingresar un nodo.");
+            log("Debe ingresar un nodo.");
+            txtNodo.setText("");
             return;
         }
 
         if (!service.existeNodo(nodo)) {
-            txtConsola.setText("El nodo no existe.");
+            log("El nodo no existe.");
+            txtNodo.setText("");
             return;
         }
 
         if (nodo.equals(service.obtenerRaiz())) {
-            txtConsola.setText("La raiz no tiene ancestros.");
+            log("La raiz no tiene ancestros.");
+            txtNodo.setText("");
             return;
         }
 
-        txtConsola.setText("Ancestros: " + service.ancestros(nodo));
+        log("Ancestros de " + nodo + ": " + service.ancestros(nodo));
+        txtNodo.setText("");
     }
 
     private void btnDescendientesActionPerformed(ActionEvent evt) {
@@ -245,21 +273,25 @@ public class AnalisisArbolForm {
         String nodo = txtNodo.getText().trim();
 
         if (nodo.isEmpty()) {
-            txtConsola.setText("Debe ingresar un nodo.");
+            log("Debe ingresar un nodo.");
+            txtNodo.setText("");
             return;
         }
 
         if (!service.existeNodo(nodo)) {
-            txtConsola.setText("El nodo no existe.");
+            log("El nodo no existe.");
+            txtNodo.setText("");
             return;
         }
 
-        txtConsola.setText("Descendientes: " + service.descendientes(nodo));
+        log("Descendientes de " + nodo + ": " + service.descendientes(nodo));
+        txtNodo.setText("");
     }
 
     private void btnHojasActionPerformed(ActionEvent evt) {
 
-        txtConsola.setText("Hojas: " + service.hojas());
+        log("Hojas: " + service.hojas());
+
     }
 
     private void btnAlturaActionPerformed(ActionEvent evt) {
@@ -267,16 +299,19 @@ public class AnalisisArbolForm {
         String nodo = txtNodo.getText().trim();
 
         if (nodo.isEmpty()) {
-            txtConsola.setText("Altura del arbol: " + service.alturaArbol());
+            log("Altura del arbol: " + service.alturaArbol());
+            txtNodo.setText("");
             return;
         }
 
         if (!service.existeNodo(nodo)) {
-            txtConsola.setText("El nodo no existe.");
+            log("El nodo no existe.");
+            txtNodo.setText("");
             return;
         }
 
-        txtConsola.setText("Altura de " + nodo + ": " + service.alturaNodo(nodo));
+        log("Altura de " + nodo + ": " + service.alturaNodo(nodo));
+        txtNodo.setText("");
     }
 
     private void btnProfundidadActionPerformed(ActionEvent evt) {
@@ -284,16 +319,19 @@ public class AnalisisArbolForm {
         String nodo = txtNodo.getText().trim();
 
         if (nodo.isEmpty()) {
-            txtConsola.setText("Debe ingresar un nodo.");
+            log("Debe ingresar un nodo.");
+            txtNodo.setText("");
             return;
         }
 
         if (!service.existeNodo(nodo)) {
-            txtConsola.setText("El nodo no existe.");
+            log("El nodo no existe.");
+            txtNodo.setText("");
             return;
         }
 
-        txtConsola.setText("Profundidad de " + nodo + ": " + service.profundidadNodo(nodo));
+        log("Profundidad de " + nodo + ": " + service.profundidadNodo(nodo));
+        txtNodo.setText("");
     }
 
     private void btnRecorridosActionPerformed(ActionEvent evt) {
@@ -314,19 +352,169 @@ public class AnalisisArbolForm {
 
         switch (seleccion) {
             case "Preorden":
-                txtConsola.setText("Preorden: " + service.preorden());
+                log("Preorden: " + service.preorden());
                 break;
             case "Postorden":
-                txtConsola.setText("Postorden: " + service.postorden());
+                log("Postorden: " + service.postorden());
                 break;
             case "Inorden":
-                txtConsola.setText("Inorden: " + service.inorden());
+                log("Inorden: " + service.inorden());
                 break;
             default:
-                txtConsola.setText("Seleccione recorrido");
+                log("Seleccione recorrido");
                 break;
         }
     }
+    private void btnAncestrosPropiosActionPerformed(ActionEvent evt) {
 
+        String nodo = txtNodo.getText().trim();
 
+        if (nodo.isEmpty()) {
+            log("Debe ingresar un nodo.");
+            txtNodo.setText("");
+            return;
+        }
+
+        if (!service.existeNodo(nodo)) {
+            log("El nodo no existe.");
+            txtNodo.setText("");
+            return;
+        }
+
+        if (nodo.equals(service.obtenerRaiz())) {
+            log("La raiz no tiene ancestros propios.");
+            txtNodo.setText("");
+            return;
+        }
+
+        log("Ancestros propios de " + nodo + ": " + service.ancestrosPropios(nodo));
+        txtNodo.setText("");
+    }
+    private void btnHijosActionPerformed(ActionEvent evt) {
+
+        String nodo = txtNodo.getText().trim();
+
+        if (nodo.isEmpty()) {
+            log("Debe ingresar un nodo.");
+            txtNodo.setText("");
+            return;
+        }
+
+        if (!service.existeNodo(nodo)) {
+            log("El nodo no existe.");
+            txtNodo.setText("");
+            return;
+        }
+
+        log("Hijos de " + nodo + ": " + service.hijos(nodo));
+        txtNodo.setText("");
+    }
+    private void btnHermanosActionPerformed(ActionEvent evt) {
+
+        String nodo = txtNodo.getText().trim();
+
+        if (nodo.isEmpty()) {
+            log("Debe ingresar un nodo.");
+            txtNodo.setText("");
+            return;
+        }
+
+        if (!service.existeNodo(nodo)) {
+            log("El nodo no existe.");
+            txtNodo.setText("");
+            return;
+        }
+
+        log("Hermanos de " + nodo + ": " + service.hermanos(nodo));
+        txtNodo.setText("");
+    }
+    private void btnHermanoDerActionPerformed(ActionEvent evt) {
+
+        String input = txtNodo.getText().trim();
+
+        if (input.isEmpty()) {
+            log("Debe ingresar uno o dos nodos separados por coma.");
+            txtNodo.setText("");
+            return;
+        }
+
+        String[] valores = input.split(",");
+
+        if (valores.length == 1) {
+
+            String hermano = service.hermanoDerecho(valores[0].trim());
+
+            if (hermano == null) {
+                log(input + " No tiene hermano derecho.");
+                txtNodo.setText("");
+            }
+            else {
+                log("Hermano derecho de " + input + ": " + hermano);
+                txtNodo.setText("");
+            }
+
+        } else if (valores.length == 2) {
+
+            boolean resultado = service.estaALaDerechaDe(
+                    valores[0].trim(),
+                    valores[1].trim()
+            );
+
+            log(resultado
+                    ? valores[1] + " está a la derecha de " + valores[0]
+                    : "No están en esa relación.");
+            txtNodo.setText("");
+
+        } else {
+            log("Formato incorrecto.");
+            txtNodo.setText("");
+        }
+    }
+    private void btnHermanoIzqActionPerformed(ActionEvent evt) {
+
+        String nodo = txtNodo.getText().trim();
+
+        if (nodo.isEmpty()) {
+            log("Debe ingresar un nodo.");
+            txtNodo.setText("");
+            return;
+        }
+
+        String hermano = service.hermanoIzquierdo(nodo);
+
+        if (hermano == null) {
+            log(nodo + " No tiene hermano izquierdo.");
+            txtNodo.setText("");
+        }
+        else {
+            log("Hermano izquierdo de " + nodo + ": " + hermano);
+            txtNodo.setText("");
+        }
+    }
+
+    private void limpiarVistaInicial() {
+
+        service.reset();
+
+        // Modelo vacío
+        DefaultMutableTreeNode raizVacia = new DefaultMutableTreeNode("Arbol vacio");
+        DefaultTreeModel modelo = new DefaultTreeModel(raizVacia);
+        ViewArbol.setModel(modelo);
+
+        // Limpiar campos
+        txtDatos.setText("");
+        txtNodo.setText("");
+        txtLongitud.setText("");
+        txtSecuencia.setText("");
+        txtConsola.setText("");
+
+        // Estado inicial
+        txtDatos.setEnabled(true);
+        btnGenerar.setEnabled(true);
+        deshabilitarBotones();
+    }
+    private void log(String mensaje) {
+        txtConsola.append(mensaje + "\n");
+        txtConsola.setCaretPosition(txtConsola.getDocument().getLength());
+    }
 }
