@@ -23,6 +23,14 @@ public class ArbolService {
                 ? modelo.GetRaiz().getDato()
                 : null;
     }
+    public int contarCaminos(int longitud)
+    {
+        return modelo.GetCaminosLongitud(longitud);
+    }
+    public NodoGeneral<String> obtenerNodoRaiz()
+    {
+        return modelo.GetRaiz();
+    }
 
     public int alturaArbol()
     {
@@ -83,5 +91,14 @@ public class ArbolService {
     public Map<Integer, List<String>> niveles()
     {
         return modelo.GetNiveles();
+    }
+    public boolean existeNodo(String valor)
+    {
+        return modelo.buscar(valor) != null;
+    }
+
+    public void reset()
+    {
+        modelo = new ArbolModel();
     }
 }
